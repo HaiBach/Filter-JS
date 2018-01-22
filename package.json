@@ -1,0 +1,35 @@
+{
+  "name": "filter-js",
+  "version": "1.0.0",
+  "description": "Basic filter result - Javascript plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HaiBach/Filter-JS.git"
+  },
+  "keywords": [
+    "filter",
+    "javascript",
+    "typescript",
+    "form"
+  ],
+  "author": "Nguyen Van Thy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HaiBach/Filter-JS/issues"
+  },
+  "homepage": "https://github.com/HaiBach/Filter-JS#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^3.9.2",
+    "gulp-cli": "^2.0.0",
+    "gulp-pug": "^3.3.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-string-replace": "^1.0.0",
+    "gulp-typescript": "^4.0.0-alpha.1",
+    "typescript": "^2.6.2"
+  }
+}

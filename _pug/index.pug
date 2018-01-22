@@ -1,0 +1,260 @@
+doctype html
+html(lang="en")
+  head
+    title Test Filter-JS
+    meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
+    link(rel="stylesheet", href="css/bootstrap-reboot.css")
+    link(rel="stylesheet", href="css/bootstrap-grid.css")
+    link(rel="stylesheet", href="css/filter-js.css")
+    link(rel="stylesheet", href="css/style.css")
+
+    style(rel="stylesheet").
+      .scrollbox {
+        visibility: hidden;
+        overflow-y: scroll;
+        height: 200px;
+        padding: 20px;
+        border: 4px solid red;
+        column-count: 5;
+      }
+
+  body
+    .container
+      .row
+        section#discontinued.filterjs(
+          data-input="#discontinued input"
+          data-input-all="#discontinued #all"
+          data-target="#discontinued .item"
+        )
+          .inner
+            p.txtLead 生産が終了した製品の一覧をご確認いただけます。
+            .list_fields
+              ul
+                li
+                  label
+                    strong 製品を絞り込む
+                li
+                  input#all(type='checkbox', name='all_field', value='all', checked='')
+                  label(for='all') すべて
+                li
+                  input#gas_meter(type='checkbox', name='gas_meter', value='gas_meter')
+                  label(for='gas_meter') ガスメーター
+                li
+                  input#water_meter(type='checkbox', name='water_meter', value='water_meter')
+                  label(for='water_meter') 水道メーター
+                li
+                  input#flow_meter(type='checkbox', name='flow_meter', value='flow_meter')
+                  label(for='flow_meter') 流量計
+                li
+                  input#flow_sensor(type='checkbox', name='flow_sensor', value='flow_sensor')
+                  label(for='flow_sensor') 流量センサー
+                li
+                  input#indicator(type='checkbox', name='indicator', value='indicator')
+                  label(for='indicator') 検針システム・指示計
+                li
+                  input#other(type='checkbox', name='other', value='other')
+                  label(for='other') その他計測機器・システム
+            // /.list_fields
+            .content
+              .item(data-category='water_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 水位計
+                      span 生産終了時期：2017年10月
+                    h3.title 投込式水位計 LP008
+              // /.item
+              .item(data-category='gas_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag ガスメーター
+                      span 生産終了時期：2017年3月
+                    h3.title E型/E4型保安ガスメーター EA25/EA4MT
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2016年10月
+                    h3.title 整圧器停止機能付き開度監視ユニット TX410
+              // /.item
+              .item(data-category='indicator all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 検針システム・指示計
+                      span 生産終了時期：2016年3月
+                    h3.title 指示計 TI1300
+              // /.item
+              .item(data-category='flow_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2016年3月
+                    h3.title オイルメーター OF-P/OF-PR
+              // /.item
+              .item(data-category='gas_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag ガスメーター
+                      span 生産終了時期：2015年12月
+                    h3.title S型保安ガスメーター AR-X
+              // /.item
+              .item(data-category='indicator all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 検針システム・指示計
+                      span 生産終了時期：2015年9月
+                    h3.title 指示計 TI900
+              // /.item
+              .item(data-category='flow_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2015年4月
+                    h3.title 電磁流量計 RCV
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2015年3月
+                    h3.title 投込式水位計 LP009
+              // /.item
+              .item(data-category='gas_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag ガスメーター
+                      span 生産終了時期：2015年3月
+                    h3.title 電文カウンター TX150
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2014年12月
+                    h3.title 簡易ガス用デジタル式自記圧力計 DA304
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2014年9月
+                    h3.title 都市ガス用デジタルマノメータ MP-301
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2014年5月
+                    h3.title 都市ガス用デジタル式自記圧力計 DA303
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2014年3月
+                    h3.title たすけ愛タイプ JH1000
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2014年3月
+                    h3.title 通信端末装置・通報装置 MPT700
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2013年12月
+                    h3.title Webターミナル PM-W
+              // /.item
+              .item(data-category='flow_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2013年10月
+                    h3.title 電磁式微小流量センサー VNR 
+              // /.item
+              .item(data-category='all flow_meter')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2013年4月
+                    h3.title 流量温度センサー EmoniNet 
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2013年3月
+                    h3.title ジャストプリンター PM10Z 
+              // /.item
+              .item(data-category='all gas_meter')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag ガスメーター
+                      span 生産終了時期：2012年12月
+                    h3.title LPガス用ガス警報器 AG53 
+              // /.item
+              .item(data-category='other all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag その他計測機器・システム
+                      span 生産終了時期：2012年3月
+                    h3.title 機械式気体用自記圧力計 DA07 
+              // /.item
+              .item(data-category='all flow_meter')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2011年8月
+                    h3.title 液体超音波瞬間流量計 TRL-S
+              // /.item
+              .item(data-category='all flow_meter')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2011年8月
+                    h3.title 液体超音波瞬間流量計 TRL-T
+              // /.item
+              .item(data-category='flow_meter all')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag 流量計
+                      span 生産終了時期：2010年9月
+                    h3.title 気体用超音波流量センサー TMX
+              // /.item
+              .item(data-category='all gas_meter')
+                .itemWrap
+                  .entry
+                    .category
+                      span.tag ガスメーター
+                      span 生産終了時期：2008年8月
+                    h3.title 電文カウンター TV60-1
+              // /.item
+
+    script(src="js/filter-js.js")
