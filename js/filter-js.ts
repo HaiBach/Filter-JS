@@ -236,11 +236,10 @@
       /**
        * EVENT TAP TREN BUTTON $RESET
        */
-      this.$reset.addEventListener('click', function(e) {
+      this.$reset.addEventListener('click', function(e: any) {
 
         // Loai bo checked tren cac $inputs khong co checked luc dau
         let $inputNotChecked = that.Not(that.$inputs, that.$inputCheckedInit);
-        console.log($inputNotChecked);
         for( let key in $inputNotChecked ) {
           $inputNotChecked[key].checked = false;
         }
@@ -304,7 +303,6 @@
       /**
        * TRUONG HOP: $INPUTALL CHECKED
        */
-      console.log(this.$inputChecked);
       if(this.$inputChecked.indexOf(this.$inputAll) !== -1 ) {
         if( this.$inputAll.checked === true ) {
           // Loai bo checked trong tat cat $input khac

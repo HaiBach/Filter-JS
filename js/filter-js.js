@@ -208,7 +208,6 @@
             this.$reset.addEventListener('click', function (e) {
                 // Loai bo checked tren cac $inputs khong co checked luc dau
                 var $inputNotChecked = that.Not(that.$inputs, that.$inputCheckedInit);
-                console.log($inputNotChecked);
                 for (var key in $inputNotChecked) {
                     $inputNotChecked[key].checked = false;
                 }
@@ -265,7 +264,6 @@
             /**
              * TRUONG HOP: $INPUTALL CHECKED
              */
-            console.log(this.$inputChecked);
             if (this.$inputChecked.indexOf(this.$inputAll) !== -1) {
                 if (this.$inputAll.checked === true) {
                     // Loai bo checked trong tat cat $input khac
