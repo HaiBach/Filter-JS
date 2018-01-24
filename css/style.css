@@ -2,3 +2,17 @@
   padding: 10px 20px;
   margin-bottom: 10px;
   background-color: #FCF6C7; }
+
+#discontinued .tag {
+  padding: 3px 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: #333;
+  border-radius: 20px;
+  color: #fff; }
+
+#discontinued .filterjs-first {
+  background-color: #FB9E9E; }
+
+#discontinued .filterjs-last {
+  background-color: #B2FD8D; }

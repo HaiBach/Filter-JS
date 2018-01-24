@@ -17,7 +17,7 @@
     }
   }
   // Assign Class to Global variable
-  window.FilterJS = FilterJS;
+  (<any>window).FilterJS = FilterJS;
 
 
   /**
@@ -25,6 +25,15 @@
    * Ho tro nhieu filter tren cung 1 trang
    */
   class FilterJSOne {
+    $filter: any;
+    $inputAll: any;
+    $inputs: any;
+    $targets: any;
+    $reset: any;
+    $inputChecked: any[] = [];
+    $inputCheckedInit: any[] = [];
+    $targetChecked: any[] = [];
+
     constructor($filter: any) {
 
       // Variable Initial
@@ -32,19 +41,24 @@
       let selectorInputAll: string = $filter.getAttribute('data-input-all') || false;
       let selectorInput: string = $filter.getAttribute('data-input') || false;
       let selectorTarget: string = $filter.getAttribute('data-target') || false;
+      let selectorReset: string = $filter.getAttribute('data-reset') || false;
 
       this.$inputAll = $filter.querySelector(selectorInputAll) || document.createElement('div');
       this.$inputs = this.ConvertNode($filter.querySelectorAll(selectorInput));
       this.$targets = this.ConvertNode($filter.querySelectorAll(selectorTarget));
-      this.$targetChecked = [];
+      this.$reset = $filter.querySelector(selectorReset) || document.createElement('div');
 
       // Remove $inputAll out $input
       this.$inputs = this.Not(this.$inputs, this.$inputAll);
 
-      // Setup checked all at begin
-      this.CheckedAllAtBegin();
-      // Event Chagne on Inputs
+      // Luu tru $inputChecked luc ban dau
+      this.$inputCheckedInit = this.$inputChecked = this.GetInputChecked();
+      // Hien thi doi tuong $target luc ban dau
+      this.SetTargetChecked();
+      // Event Chagne tren $inputs
       this.EventChange();
+      // Event Tap tren $reset
+      this.EventTap();
     }
 
     private ConvertNode($nodes: any) {
@@ -54,13 +68,13 @@
       }
       return $nodesNew;
     }
-    private ConvertPercent(str: string, $nodeSize: any) {
-      let re = /\d+\.?\d*\%/g,
-          match = str.match(re),
-          vConvert, valueCur;
+    private ConvertPercent(str: any, $nodeSize: any) {
+      let re: any = /\d+\.?\d*\%/g;
+      let match: any = str.match(re);
+      let vConvert, valueCur;
 
       for( let key in match ) {
-        vConvert = parseFloat(match[key].replace('%', ''), 10);
+        vConvert = parseFloat(match[key].replace('%', ''));
         vConvert = $nodeSize.offsetWidth * vConvert / 100;
 
         str = str.replace(match[key], vConvert);
@@ -83,19 +97,15 @@
       if( $nodesRemove.nodeType === 1 ) $nodesRemove = [$nodesRemove];
 
       // Copy $node to other array[]
-      let $nodes1: any[] = [];
-      for( let key in $nodes ) {
-        $nodes1.push($nodes[key]);
-      }
+      let $result: any[] = [];
 
       // Vong lap: setup tung $nodeRemove
-      for( let key in $nodesRemove ) {
-        let index: number = $nodes.indexOf($nodesRemove[key]);
-        if( index !== -1 ) {
-          $nodes1.splice(index, 1);
+      for( let key in $nodes ) {
+        if( $nodesRemove.indexOf($nodes[key]) === -1 ) {
+          $result.push($nodes[key]);
         }
       }
-      return $nodes1;
+      return $result;
     }
     private HasClass($nodes: any, strClass: string): boolean {
       // Chi thuc hien voi Node dau tien
@@ -176,7 +186,7 @@
         }
       }
     }
-    private CSS($nodes: any, styles: object): void {
+    private CSS($nodes: any, styles: any): void {
       // Convert to Array
       if( !!$nodes.nodeType ) $nodes = [$nodes];
 
@@ -192,55 +202,90 @@
 
 
 
+    // Event Change tren $inputs
     private EventChange(): void {
       var that = this;
 
       // Setup EventChagne on each $input
       for( let key in this.$inputs ) {
-        this.$inputs[key].addEventListener('change', function() {
-          let $checked = that.InputChecked();
-
-          // Reset $targetChecked
-          that.$targetChecked = [];
-
+        this.$inputs[key].addEventListener('change', function(this: any) {
+          
           // Remove checked on $inputAll
           if( this.checked === true ) that.$inputAll.checked = false;
+          // Lay doi tuong $inputs checked
+          that.$inputChecked = that.GetInputChecked();
 
-          // Get $target has category checked in each $inputChecked
-          for( let key in $checked ) {
-            let categoryCur = $checked[key].value || false;
-            that.TargetChecked(categoryCur);
-          }
-          // console.log(that.$targetChecked);
-          // Show $target
-          that.ShowTarget();
+          // Hien thi cac doi tuong $target checked
+          that.SetTargetChecked();
         });
       }
 
 
       // Setup EventChange on $inputAll
       this.$inputAll.addEventListener('change', function() {
-        that.CheckedAll();
+        // Lay doi tuong $inputAll
+        that.$inputChecked = [ that.$inputAll ];
+        // Hien thi cac doi tuong $target checked
+        that.SetTargetChecked();
       });
     }
+    // Event Tap tren button Reset
+    private EventTap(): void {
+      let that = this;
 
-    private InputChecked(): any {
-      this.$inputChecked = [];
-      for( let key in this.$inputs ) {
-        // Push $input checked into Array[]
-        if( this.$inputs[key].checked === true ) {
-          this.$inputChecked.push(this.$inputs[key]);
+      /**
+       * EVENT TAP TREN BUTTON $RESET
+       */
+      this.$reset.addEventListener('click', function(e) {
+
+        // Loai bo checked tren cac $inputs khong co checked luc dau
+        let $inputNotChecked = that.Not(that.$inputs, that.$inputCheckedInit);
+        console.log($inputNotChecked);
+        for( let key in $inputNotChecked ) {
+          $inputNotChecked[key].checked = false;
+        }
+        // Set checked tren luu tru luc ban dau
+        for( let key in that.$inputCheckedInit ) {
+          that.$inputCheckedInit[key].checked = true;
+        }
+
+        // Lay doi tuong $input checked
+        that.$inputChecked = that.$inputCheckedInit;
+        // Hien thi cac doi tuong $target checked
+        that.SetTargetChecked();
+
+        // Don't add URL with href="#" - Stop Hash(#)
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+      });
+    }
+    private GetInputChecked(): any {
+      let $inputChecked: any[] = [];
+      
+      // Truong hop: InputAll checked
+      if( this.$inputAll.checked === true ) {
+        $inputChecked.push(this.$inputAll);
+        // Loai bo checked o khac $inputs khac
+        for( let key in this.$inputs ) {
+          this.$inputs[key].checked = false;
         }
       }
-      // Return $input checked
-      return this.$inputChecked;
+      // Truong hop: InputAll no check
+      // Them $inputChecked vao danh sach
+      else {
+        for( let key in this.$inputs ) {
+          if( this.$inputs[key].checked === true ) {
+            $inputChecked.push(this.$inputs[key]);
+          }
+        }
+      }
+      return $inputChecked;
     }
     // Get $target has category on $intput checked
-    private TargetChecked(category: string): any {
+    private GetTargetChecked(category: string): any {
       for( let key in this.$targets ) {
         // Get & convert to array category on $target Item
         let $targetCur: any = this.$targets[key];
-        let targetCat: string = $targetCur.getAttribute('data-category') || '';
+        let targetCat: any = $targetCur.getAttribute('data-category') || '';
         targetCat = targetCat.split(' ');
 
         // Kiem tra $target co trung category khong
@@ -252,30 +297,43 @@
         }
       }
     }
-    private CheckedAll(): void {
+    private SetTargetChecked(): void {
       // Reset $targetChecked
       this.$targetChecked = [];
 
-      if( this.$inputAll.checked === true ) {
-        // Select all $target  
-        for( let key in this.$targets ) {
-          this.$targetChecked.push(this.$targets[key]);
-        }
-
-        // Remove checked in all $input
-        for( let key in this.$inputs ) {
-          this.$inputs[key].checked = false;
+      /**
+       * TRUONG HOP: $INPUTALL CHECKED
+       */
+      console.log(this.$inputChecked);
+      if(this.$inputChecked.indexOf(this.$inputAll) !== -1 ) {
+        if( this.$inputAll.checked === true ) {
+          // Loai bo checked trong tat cat $input khac
+          for( let key in this.$inputs ) {
+            this.$inputs[key].checked = false;
+          }
+          // Copy tat ca doi tuong $targets 
+          for( let key in this.$targets ) {
+            this.$targetChecked.push(this.$targets[key]);
+          }
         }
       }
+
+      /**
+       * TRUONG HOP $INPUTS KHAC CHECKED
+       */
+      else {
+        // Loai bo checked cua $inputAll
+        this.$inputAll.checked = false;
+
+        // Lay tat ca doi tuong $targets theo category $input
+        for( let key in this.$inputChecked ) {
+          let categoryCur = this.$inputChecked[key].value || false;
+          this.GetTargetChecked(categoryCur);
+        }
+      }
+
       // Show $target
       this.ShowTarget();
-      // console.log(this.$targetChecked);
-    }
-    // Check All at Begin
-    private CheckedAllAtBegin(): void {
-      if( this.$inputAll.checked === true ) {
-        this.CheckedAll();
-      }
     }
     // Show $target after $input change
     private ShowTarget(): void {
@@ -288,12 +346,25 @@
       for( let key in this.$targetChecked ) {
         this.CSS(this.$targetChecked, { display: '' });
       }
+
+
+      // Add order into TargetChecked: Addclass 'First' & 'Last' to $nodes
+      let classHide: string = 'filterjs-hide';
+      let classShow: string = 'filterjs-show';
+      let classFirst: string = 'filterjs-first';
+      let classLast: string = 'filterjs-last';
+      this.RemoveClass(this.$targets, `${classHide} ${classShow} ${classFirst} ${classLast}`);
+      this.AddClass($targetHide, classHide);
+      this.AddClass(this.$targetChecked, classShow);
+
+      let $checkedOrder = this.$filter.querySelectorAll(`.${ classShow }`);
+      this.AddClass($checkedOrder[0], classFirst);
+      this.AddClass($checkedOrder[$checkedOrder.length - 1], classLast);
     }
   }
+
+  // Initial Filter
+  document.addEventListener('DOMContentLoaded', function() {
+    new FilterJS('.filterjs');
+  });
 })();
-
-
-// Initial Filter
-document.addEventListener('DOMContentLoaded', function() {
-  let filters: any = new FilterJS('.filterjs');
-});

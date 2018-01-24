@@ -25,6 +25,7 @@ html(lang="en")
           data-input="#discontinued input"
           data-input-all="#discontinued #all"
           data-target="#discontinued .item"
+          data-reset="#discontinued #reset"
         )
           .inner
             p.txtLead 生産が終了した製品の一覧をご確認いただけます。
@@ -34,7 +35,7 @@ html(lang="en")
                   label
                     strong 製品を絞り込む
                 li
-                  input#all(type='checkbox', name='all_field', value='all', checked='')
+                  input#all(type='checkbox', name='all_field', value='all' checked='')
                   label(for='all') すべて
                 li
                   input#gas_meter(type='checkbox', name='gas_meter', value='gas_meter')
@@ -43,17 +44,19 @@ html(lang="en")
                   input#water_meter(type='checkbox', name='water_meter', value='water_meter')
                   label(for='water_meter') 水道メーター
                 li
-                  input#flow_meter(type='checkbox', name='flow_meter', value='flow_meter')
+                  input#flow_meter(type='checkbox', name='flow_meter', value='flow_meter' checked='')
                   label(for='flow_meter') 流量計
                 li
                   input#flow_sensor(type='checkbox', name='flow_sensor', value='flow_sensor')
                   label(for='flow_sensor') 流量センサー
                 li
-                  input#indicator(type='checkbox', name='indicator', value='indicator')
+                  input#indicator(type='checkbox', name='indicator', value='indicator' checked='')
                   label(for='indicator') 検針システム・指示計
                 li
                   input#other(type='checkbox', name='other', value='other')
                   label(for='other') その他計測機器・システム
+                li
+                  button#reset Reset
             // /.list_fields
             .content
               .item(data-category='water_meter all')
@@ -258,3 +261,4 @@ html(lang="en")
               // /.item
 
     script(src="js/filter-js.js")
+    script(src="js/test.js")

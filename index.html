@@ -22,7 +22,7 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<section class="filterjs" id="discontinued" data-input="#discontinued input" data-input-all="#discontinued #all" data-target="#discontinued .item">
+				<section class="filterjs" id="discontinued" data-input="#discontinued input" data-input-all="#discontinued #all" data-target="#discontinued .item" data-reset="#discontinued #reset">
 					<div class="inner">
 						<p class="txtLead">生産が終了した製品の一覧をご確認いただけます。</p>
 						<div class="list_fields">
@@ -43,7 +43,7 @@
 									<label for="water_meter">水道メーター</label>
 								</li>
 								<li>
-									<input id="flow_meter" type="checkbox" name="flow_meter" value="flow_meter">
+									<input id="flow_meter" type="checkbox" name="flow_meter" value="flow_meter" checked="">
 									<label for="flow_meter">流量計</label>
 								</li>
 								<li>
@@ -51,12 +51,15 @@
 									<label for="flow_sensor">流量センサー</label>
 								</li>
 								<li>
-									<input id="indicator" type="checkbox" name="indicator" value="indicator">
+									<input id="indicator" type="checkbox" name="indicator" value="indicator" checked="">
 									<label for="indicator">検針システム・指示計</label>
 								</li>
 								<li>
 									<input id="other" type="checkbox" name="other" value="other">
 									<label for="other">その他計測機器・システム</label>
+								</li>
+								<li>
+									<button id="reset">Reset</button>
 								</li>
 							</ul>
 						</div>
@@ -293,5 +296,6 @@
 			</div>
 		</div>
 		<script src="js/filter-js.js"></script>
+		<script src="js/test.js"></script>
 	</body>
 </html>

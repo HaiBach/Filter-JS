@@ -6,6 +6,9 @@ var cleanCSS = require('gulp-clean-css');
 
 var ts = require('gulp-typescript');
 var tsProject = ts.createProject('tsconfig.json');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var tsify = require('tsify');
 
 // Pug
 gulp.task('pug', function() {
@@ -30,12 +33,25 @@ gulp.task('sass', function() {
 });
 
 // Typescript
+// gulp.task('ts', function() {
+// 	return gulp.src([
+// 			'./js/*.ts'
+// 		])
+// 		.pipe(tsProject())
+// 		.pipe(gulp.dest('./js/'));
+// });
 gulp.task('ts', function() {
-	return gulp.src([
-			'./js/*.ts'
-		])
-		.pipe(tsProject())
-		.pipe(gulp.dest('./js/'));
+	return browserify({
+		basedir: '.',
+		debug: false,
+		entries: ['js/filter-js.ts'],
+		cache: {},
+		packageCache: {}
+	})
+	.plugin(tsify)
+	.bundle()
+	.pipe(source('bundle.js'))
+	.pipe(gulp.dest('./js/'));
 });
 
 // Watch
@@ -46,4 +62,5 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', gulp.series('sass', 'pug', 'watch'));
+gulp.task('default', gulp.series('ts', 'sass', 'pug', 'watch'));
+// gulp.task('default', gulp.parallel('ts'));
