@@ -22,7 +22,7 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<section class="filterjs" id="discontinued" data-input="#discontinued input" data-input-all="#discontinued #all" data-target="#discontinued .item" data-reset="#discontinued #reset">
+				<section class="filterjs" id="discontinued" data-input="#discontinued input" data-input-all="#all" data-target="#discontinued .item" data-reset="#reset" data-more="#more-items" data-target-max-show="4" data-target-more="2">
 					<div class="inner">
 						<p class="txtLead">生産が終了した製品の一覧をご確認いただけます。</p>
 						<div class="list_fields">
@@ -35,7 +35,7 @@
 									<label for="all">すべて</label>
 								</li>
 								<li>
-									<input id="gas_meter" type="checkbox" name="gas_meter" value="gas_meter">
+									<input id="gas_meter" type="checkbox" name="gas_meter" value="gas_meter" checked="">
 									<label for="gas_meter">ガスメーター</label>
 								</li>
 								<li>
@@ -43,7 +43,7 @@
 									<label for="water_meter">水道メーター</label>
 								</li>
 								<li>
-									<input id="flow_meter" type="checkbox" name="flow_meter" value="flow_meter" checked="">
+									<input id="flow_meter" type="checkbox" name="flow_meter" value="flow_meter">
 									<label for="flow_meter">流量計</label>
 								</li>
 								<li>
@@ -51,7 +51,7 @@
 									<label for="flow_sensor">流量センサー</label>
 								</li>
 								<li>
-									<input id="indicator" type="checkbox" name="indicator" value="indicator" checked="">
+									<input id="indicator" type="checkbox" name="indicator" value="indicator">
 									<label for="indicator">検針システム・指示計</label>
 								</li>
 								<li>
@@ -290,6 +290,7 @@
 								</div>
 							</div>
 							<!-- /.item-->
+							<!-- More Items--><a id="more-items" href="#">More Items</a>
 						</div>
 					</div>
 				</section>

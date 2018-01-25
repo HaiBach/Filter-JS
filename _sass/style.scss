@@ -1,4 +1,7 @@
 #discontinued {
+	.content {
+		margin-bottom: 100px;
+	}
 	.item {
 		padding: 10px 20px;
 		margin-bottom: 10px;
@@ -16,6 +19,27 @@
 		background-color: #FB9E9E;
 	}
 	.filterjs-last {
-		background-color: #B2FD8D;;
+		margin-bottom: 20px;
+		background-color: #B2FD8D;
+	}
+
+	#more-items {
+		visibility: hidden;
+		display: block;
+		padding: 10px 50px;
+		background-color: #eee;
+		border: 1px solid #666;
+		text-align: center;
+	}
+	#more-items.filterjs-show {
+		visibility: visible;
+	}
+
+	.filterjs-actived {
+		transition: opacity 1s;
+		opacity: 0;
+	}
+	.filterjs-show {
+		opacity: 1;
 	}
 }

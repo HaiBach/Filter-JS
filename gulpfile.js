@@ -62,5 +62,5 @@ gulp.task('watch', function() {
 });
 
 // Default Task
-gulp.task('default', gulp.series('ts', 'sass', 'pug', 'watch'));
+gulp.task('default', gulp.series('sass', 'pug', 'watch'));
 // gulp.task('default', gulp.parallel('ts'));
