@@ -30,9 +30,20 @@
     $inputs: any;
     $targets: any;
     $reset: any;
+    $more: any;
     $inputChecked: any[] = [];
     $inputCheckedInit: any[] = [];
     $targetChecked: any[] = [];
+    $targetActived: any[];
+    maxShow: number = 20;
+    more: number = 4;
+    isMore: boolean = false;
+    isCSSInline: boolean = true;
+    classHide: string = 'filterjs-hide';
+    classShow: string = 'filterjs-show';
+    classActived: string = 'filterjs-actived';
+    classFirst: string = 'filterjs-first';
+    classLast: string = 'filterjs-last';
 
     constructor($filter: any) {
 
@@ -42,11 +53,18 @@
       let selectorInput: string = $filter.getAttribute('data-input') || false;
       let selectorTarget: string = $filter.getAttribute('data-target') || false;
       let selectorReset: string = $filter.getAttribute('data-reset') || false;
+      let selectorMore: string = $filter.getAttribute('data-more') || false;
 
-      this.$inputAll = $filter.querySelector(selectorInputAll) || document.createElement('div');
-      this.$inputs = this.ConvertNode($filter.querySelectorAll(selectorInput));
-      this.$targets = this.ConvertNode($filter.querySelectorAll(selectorTarget));
-      this.$reset = $filter.querySelector(selectorReset) || document.createElement('div');
+      this.$inputAll = document.querySelector(selectorInputAll) || document.createElement('div');
+      this.$inputs = this.ConvertNode(document.querySelectorAll(selectorInput));
+      this.$targets = this.ConvertNode(document.querySelectorAll(selectorTarget));
+      this.$reset = document.querySelector(selectorReset) || document.createElement('div');
+      this.$more = document.querySelector(selectorMore) || false;
+      this.maxShow = parseInt($filter.getAttribute('data-target-max-show')) || this.maxShow;
+      this.more = parseInt($filter.getAttribute('data-target-more')) || this.more;
+      this.isMore = !!this.$more;
+      this.isCSSInline = $filter.getAttribute('data-is-css-inline') || this.isCSSInline;
+      this.isCSSInline = (this.isCSSInline === 'false') ? false : true;
 
       // Remove $inputAll out $input
       this.$inputs = this.Not(this.$inputs, this.$inputAll);
@@ -256,6 +274,44 @@
         // Don't add URL with href="#" - Stop Hash(#)
         e.preventDefault ? e.preventDefault() : e.returnValue = false;
       });
+
+
+      /**
+       * EVENT TAP TREN BUTTON MORE
+       */
+      this.isMore && this.$more.addEventListener('click', function(e: any) {
+        let $targetShow: any[] = [];
+
+        // Them doi tuong $target vao mang[]
+        for( let i = 0, len = that.$targetActived.length; i < len; i++ ) {
+          if( i < that.more ) {
+            $targetShow.push(that.$targetActived[i]);
+          }
+        }
+        // Loai bo $targetShow khoi doi tuong $targetActived
+        that.$targetActived = that.Not(that.$targetActived, $targetShow);
+
+
+        /**
+         * Toggle class
+         */
+        // Loai bo class 'last' tren doi tuong $targetLast
+        // Loai bo class 'hide' tren cac doi tuong $target Show
+        that.isCSSInline && that.CSS($targetShow, { display: '' });
+        that.RemoveClass(that.$targets, that.classLast);
+        that.RemoveClass($targetShow, that.classHide);
+        // Add class vao doi tuong $target hien thi them
+        setTimeout(function() {
+          that.AddClass($targetShow, that.classShow);
+          that.AddClass($targetShow[$targetShow.length - 1], that.classLast);
+        }, 50);
+        
+        // Toggle Button More
+        that.ToggleMore();
+
+        // Don't add URL with href="#" - Stop Hash(#)
+        e.preventDefault ? e.preventDefault() : e.returnValue = false;
+      });
     }
     private GetInputChecked(): any {
       let $inputChecked: any[] = [];
@@ -335,29 +391,61 @@
     }
     // Show $target after $input change
     private ShowTarget(): void {
-      let $targetHide: any[] = this.Not(this.$targets, this.$targetChecked);
+      var that = this;
 
-      // Toggle $target
-      for( let key in $targetHide ) {
-        this.CSS($targetHide[key], { display: 'none' });
+      // Reset tat ca cac $target: loai bo tat ca cac class
+      this.RemoveClass(this.$targets, `${this.classHide} ${this.classShow} ${this.classActived} ${this.classFirst} ${this.classLast}`);
+      // Them class 'actived' vao cac $targetChecked de nhan biet theo thu tu
+      this.AddClass(this.$targetChecked, this.classActived);
+
+      // Lay doi tuong $target actived theo thu tu
+      this.$targetActived = this.ConvertNode(this.$filter.querySelectorAll(`.${ this.classActived }`));
+
+      // Lay doi tuong $target duoc phep show
+      let $targetShow: any[] = [];
+      if( this.isMore ) {
+        // Hien thi doi tuong $target voi so luong MaxShow
+        for( let i = 0, len = this.$targetActived.length; i < len; i++ ) {
+          if( i < this.maxShow ) {
+            // Them doi tuong vao mang $target Show
+            $targetShow.push(this.$targetActived[i]);
+          }
+        }
+        // Loai bo doi tuong $targetShow trong $targetActived
+        this.$targetActived = this.Not(this.$targetActived, $targetShow);
       }
-      for( let key in this.$targetChecked ) {
-        this.CSS(this.$targetChecked, { display: '' });
+      else {
+        $targetShow = this.$targetActived;
       }
 
+      // Lay cac doi tuong $target hide
+      let $targetHide = this.Not(this.$targets, $targetShow);
 
-      // Add order into TargetChecked: Addclass 'First' & 'Last' to $nodes
-      let classHide: string = 'filterjs-hide';
-      let classShow: string = 'filterjs-show';
-      let classFirst: string = 'filterjs-first';
-      let classLast: string = 'filterjs-last';
-      this.RemoveClass(this.$targets, `${classHide} ${classShow} ${classFirst} ${classLast}`);
-      this.AddClass($targetHide, classHide);
-      this.AddClass(this.$targetChecked, classShow);
 
-      let $checkedOrder = this.$filter.querySelectorAll(`.${ classShow }`);
-      this.AddClass($checkedOrder[0], classFirst);
-      this.AddClass($checkedOrder[$checkedOrder.length - 1], classLast);
+      /**
+       * Add class tren cac loai $target
+       */
+      this.isCSSInline && this.CSS($targetHide, { display: 'none' });
+      this.isCSSInline && this.CSS($targetShow, { display: '' });
+
+      this.AddClass($targetHide, this.classHide);
+      this.AddClass($targetShow, this.classShow);
+      this.AddClass($targetShow[0], this.classFirst);
+      this.AddClass($targetShow[$targetShow.length - 1], this.classLast);
+
+      // Toggle class hien thi Button More
+      this.ToggleMore();
+    }
+    // Toggle class hien thi Button More
+    private ToggleMore(): void {
+      if( this.isMore ) {
+        if( this.$targetActived.length > 0 ) {
+          this.AddClass(this.$more, this.classShow);
+        }
+        else {
+          this.RemoveClass(this.$more, this.classShow);
+        }
+      }
     }
   }
 

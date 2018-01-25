@@ -23,9 +23,12 @@ html(lang="en")
       .row
         section#discontinued.filterjs(
           data-input="#discontinued input"
-          data-input-all="#discontinued #all"
+          data-input-all="#all"
           data-target="#discontinued .item"
-          data-reset="#discontinued #reset"
+          data-reset="#reset"
+          data-more="#more-items"
+          data-target-max-show="4"
+          data-target-more="2"
         )
           .inner
             p.txtLead 生産が終了した製品の一覧をご確認いただけます。
@@ -38,19 +41,19 @@ html(lang="en")
                   input#all(type='checkbox', name='all_field', value='all' checked='')
                   label(for='all') すべて
                 li
-                  input#gas_meter(type='checkbox', name='gas_meter', value='gas_meter')
+                  input#gas_meter(type='checkbox', name='gas_meter', value='gas_meter' checked='')
                   label(for='gas_meter') ガスメーター
                 li
                   input#water_meter(type='checkbox', name='water_meter', value='water_meter')
                   label(for='water_meter') 水道メーター
                 li
-                  input#flow_meter(type='checkbox', name='flow_meter', value='flow_meter' checked='')
+                  input#flow_meter(type='checkbox', name='flow_meter', value='flow_meter')
                   label(for='flow_meter') 流量計
                 li
                   input#flow_sensor(type='checkbox', name='flow_sensor', value='flow_sensor')
                   label(for='flow_sensor') 流量センサー
                 li
-                  input#indicator(type='checkbox', name='indicator', value='indicator' checked='')
+                  input#indicator(type='checkbox', name='indicator', value='indicator')
                   label(for='indicator') 検針システム・指示計
                 li
                   input#other(type='checkbox', name='other', value='other')
@@ -259,6 +262,9 @@ html(lang="en")
                       span 生産終了時期：2008年8月
                     h3.title 電文カウンター TV60-1
               // /.item
+
+              // More Items
+              a#more-items(href="#") More Items
 
     script(src="js/filter-js.js")
     script(src="js/test.js")

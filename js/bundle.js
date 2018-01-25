@@ -28,23 +28,28 @@
             this.$inputChecked = [];
             this.$inputCheckedInit = [];
             this.$targetChecked = [];
+            this.maxShow = 10;
             // Variable Initial
             this.$filter = $filter;
             var selectorInputAll = $filter.getAttribute('data-input-all') || false;
             var selectorInput = $filter.getAttribute('data-input') || false;
             var selectorTarget = $filter.getAttribute('data-target') || false;
+            var selectorReset = $filter.getAttribute('data-reset') || false;
             this.$inputAll = $filter.querySelector(selectorInputAll) || document.createElement('div');
             this.$inputs = this.ConvertNode($filter.querySelectorAll(selectorInput));
             this.$targets = this.ConvertNode($filter.querySelectorAll(selectorTarget));
-            // this.$targetChecked = [];
+            this.$reset = $filter.querySelector(selectorReset) || document.createElement('div');
+            this.maxShow = parseInt($filter.getAttribute('data-max-show')) || this.maxShow;
             // Remove $inputAll out $input
             this.$inputs = this.Not(this.$inputs, this.$inputAll);
             // Luu tru $inputChecked luc ban dau
-            this.GetInputCheckedInit();
-            // Setup checked all at begin
-            this.CheckedAllAtBegin();
-            // Event Chagne on Inputs
+            this.$inputCheckedInit = this.$inputChecked = this.GetInputChecked();
+            // Hien thi doi tuong $target luc ban dau
+            this.SetTargetChecked();
+            // Event Chagne tren $inputs
             this.EventChange();
+            // Event Tap tren $reset
+            this.EventTap();
         }
         FilterJSOne.prototype.ConvertNode = function ($nodes) {
             var $nodesNew = [];
@@ -174,36 +179,62 @@
                 }
             }
         };
+        // Event Change tren $inputs
         FilterJSOne.prototype.EventChange = function () {
             var that = this;
             // Setup EventChagne on each $input
             for (var key in this.$inputs) {
                 this.$inputs[key].addEventListener('change', function () {
-                    var $inputChecked = that.GetInputChecked();
-                    // Reset $targetChecked
-                    that.$targetChecked = [];
                     // Remove checked on $inputAll
                     if (this.checked === true)
                         that.$inputAll.checked = false;
-                    // Get $target has category checked in each $inputChecked
-                    for (var key_1 in $inputChecked) {
-                        var categoryCur = $inputChecked[key_1].value || false;
-                        that.GetTargetChecked(categoryCur);
-                    }
-                    // Show $target
-                    that.ShowTarget();
+                    // Lay doi tuong $inputs checked
+                    that.$inputChecked = that.GetInputChecked();
+                    // Hien thi cac doi tuong $target checked
+                    that.SetTargetChecked();
                 });
             }
             // Setup EventChange on $inputAll
             this.$inputAll.addEventListener('change', function () {
-                that.SetCheckedAll();
+                // Lay doi tuong $inputAll
+                that.$inputChecked = [that.$inputAll];
+                // Hien thi cac doi tuong $target checked
+                that.SetTargetChecked();
             });
         };
-        FilterJSOne.prototype.GetInputCheckedInit = function () {
+        // Event Tap tren button Reset
+        FilterJSOne.prototype.EventTap = function () {
+            var that = this;
+            /**
+             * EVENT TAP TREN BUTTON $RESET
+             */
+            this.$reset.addEventListener('click', function (e) {
+                // Loai bo checked tren cac $inputs khong co checked luc dau
+                var $inputNotChecked = that.Not(that.$inputs, that.$inputCheckedInit);
+                for (var key in $inputNotChecked) {
+                    $inputNotChecked[key].checked = false;
+                }
+                // Set checked tren luu tru luc ban dau
+                for (var key in that.$inputCheckedInit) {
+                    that.$inputCheckedInit[key].checked = true;
+                }
+                // Lay doi tuong $input checked
+                that.$inputChecked = that.$inputCheckedInit;
+                // Hien thi cac doi tuong $target checked
+                that.SetTargetChecked();
+                // Don't add URL with href="#" - Stop Hash(#)
+                e.preventDefault ? e.preventDefault() : e.returnValue = false;
+            });
+        };
+        FilterJSOne.prototype.GetInputChecked = function () {
             var $inputChecked = [];
             // Truong hop: InputAll checked
             if (this.$inputAll.checked === true) {
                 $inputChecked.push(this.$inputAll);
+                // Loai bo checked o khac $inputs khac
+                for (var key in this.$inputs) {
+                    this.$inputs[key].checked = false;
+                }
             }
             else {
                 for (var key in this.$inputs) {
@@ -212,20 +243,7 @@
                     }
                 }
             }
-            // Luu tru tren bien chung
-            this.$inputCheckedInit = $inputChecked;
-            console.log($inputChecked);
-        };
-        FilterJSOne.prototype.GetInputChecked = function () {
-            this.$inputChecked = [];
-            for (var key in this.$inputs) {
-                // Push $input checked into Array[]
-                if (this.$inputs[key].checked === true) {
-                    this.$inputChecked.push(this.$inputs[key]);
-                }
-            }
-            // Return $input checked
-            return this.$inputChecked;
+            return $inputChecked;
         };
         // Get $target has category on $intput checked
         FilterJSOne.prototype.GetTargetChecked = function (category) {
@@ -243,27 +261,35 @@
                 }
             }
         };
-        FilterJSOne.prototype.SetCheckedAll = function () {
+        FilterJSOne.prototype.SetTargetChecked = function () {
             // Reset $targetChecked
             this.$targetChecked = [];
-            if (this.$inputAll.checked === true) {
-                // Select all $target  
-                for (var key in this.$targets) {
-                    this.$targetChecked.push(this.$targets[key]);
+            /**
+             * TRUONG HOP: $INPUTALL CHECKED
+             */
+            if (this.$inputChecked.indexOf(this.$inputAll) !== -1) {
+                if (this.$inputAll.checked === true) {
+                    // Loai bo checked trong tat cat $input khac
+                    for (var key in this.$inputs) {
+                        this.$inputs[key].checked = false;
+                    }
+                    // Copy tat ca doi tuong $targets 
+                    for (var key in this.$targets) {
+                        this.$targetChecked.push(this.$targets[key]);
+                    }
                 }
-                // Remove checked in all $input
-                for (var key in this.$inputs) {
-                    this.$inputs[key].checked = false;
+            }
+            else {
+                // Loai bo checked cua $inputAll
+                this.$inputAll.checked = false;
+                // Lay tat ca doi tuong $targets theo category $input
+                for (var key in this.$inputChecked) {
+                    var categoryCur = this.$inputChecked[key].value || false;
+                    this.GetTargetChecked(categoryCur);
                 }
             }
             // Show $target
             this.ShowTarget();
-        };
-        // Check All at Begin
-        FilterJSOne.prototype.CheckedAllAtBegin = function () {
-            if (this.$inputAll.checked === true) {
-                this.SetCheckedAll();
-            }
         };
         // Show $target after $input change
         FilterJSOne.prototype.ShowTarget = function () {
