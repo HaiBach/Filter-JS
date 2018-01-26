@@ -8,6 +8,3 @@ var Color;
 var c = Color.Green;
 var d = Color.Blue;
 var colorName = Color[5];
-// console.log(c, d);
-// console.log(colorName); 
-//# sourceMappingURL=test.js.map

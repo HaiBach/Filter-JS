@@ -38,7 +38,7 @@
     maxShow: number = 20;
     more: number = 4;
     isMore: boolean = false;
-    isCSSInline: boolean = true;
+    isAllowNoChecked: boolean;
     classHide: string = 'filterjs-hide';
     classShow: string = 'filterjs-show';
     classActived: string = 'filterjs-actived';
@@ -63,8 +63,7 @@
       this.maxShow = parseInt($filter.getAttribute('data-target-max-show')) || this.maxShow;
       this.more = parseInt($filter.getAttribute('data-target-more')) || this.more;
       this.isMore = !!this.$more;
-      this.isCSSInline = $filter.getAttribute('data-is-css-inline') || this.isCSSInline;
-      this.isCSSInline = (this.isCSSInline === 'false') ? false : true;
+      this.isAllowNoChecked = ($filter.getAttribute('data-is-allow-no-check') === 'true') ? true : false;
 
       // Remove $inputAll out $input
       this.$inputs = this.Not(this.$inputs, this.$inputAll);
@@ -228,11 +227,24 @@
       for( let key in this.$inputs ) {
         this.$inputs[key].addEventListener('change', function(this: any) {
           
-          // Remove checked on $inputAll
-          if( this.checked === true ) that.$inputAll.checked = false;
+          // Loai bo $inputAll checked neu $inputCur checked
+          if( this.checked === true ) {
+            that.$inputAll.checked = false;
+          }
+          // Lam $inputAll checked neu tat ca $inputs khong checked
+          else {
+            if( !that.isAllowNoChecked ) {
+              let isChecked: boolean = false;
+              for( let key in that.$inputs ) {
+                if( that.$inputs[key].checked === true ) isChecked = true;
+              }
+              if( !isChecked ) that.$inputAll.checked = true;
+            }
+          }
+
+
           // Lay doi tuong $inputs checked
           that.$inputChecked = that.GetInputChecked();
-
           // Hien thi cac doi tuong $target checked
           that.SetTargetChecked();
         });
@@ -240,9 +252,15 @@
 
 
       // Setup EventChange on $inputAll
-      this.$inputAll.addEventListener('change', function() {
-        // Lay doi tuong $inputAll
-        that.$inputChecked = [ that.$inputAll ];
+      this.$inputAll.addEventListener('change', function(this: any) {
+
+        // Setup khong cho $inputAll khong checked
+        if( this.checked === false ) {
+          if( !that.isAllowNoChecked ) this.checked = true;
+        }
+
+        // Lay doi tuong $inputs checked
+        that.$inputChecked = that.GetInputChecked();
         // Hien thi cac doi tuong $target checked
         that.SetTargetChecked();
       });
@@ -297,7 +315,7 @@
          */
         // Loai bo class 'last' tren doi tuong $targetLast
         // Loai bo class 'hide' tren cac doi tuong $target Show
-        that.isCSSInline && that.CSS($targetShow, { display: '' });
+        that.CSS($targetShow, { display: '' });
         that.RemoveClass(that.$targets, that.classLast);
         that.RemoveClass($targetShow, that.classHide);
         // Add class vao doi tuong $target hien thi them
@@ -425,8 +443,8 @@
       /**
        * Add class tren cac loai $target
        */
-      this.isCSSInline && this.CSS($targetHide, { display: 'none' });
-      this.isCSSInline && this.CSS($targetShow, { display: '' });
+      this.CSS($targetHide, { display: 'none' });
+      this.CSS($targetShow, { display: '' });
 
       this.AddClass($targetHide, this.classHide);
       this.AddClass($targetShow, this.classShow);
