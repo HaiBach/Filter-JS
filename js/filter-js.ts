@@ -39,11 +39,15 @@
     more: number = 4;
     isMore: boolean = false;
     isAllowNoChecked: boolean;
+    isCSSInline: boolean;
     classHide: string = 'filterjs-hide';
     classShow: string = 'filterjs-show';
     classActived: string = 'filterjs-actived';
     classFirst: string = 'filterjs-first';
     classLast: string = 'filterjs-last';
+    evChangeBefore: any = this.Events('changebefore');
+    evChangeAfter: any = this.Events('changeafter');
+    evTargetHide: any = this.Events('targethide');
 
     constructor($filter: any) {
 
@@ -64,6 +68,8 @@
       this.more = parseInt($filter.getAttribute('data-target-more')) || this.more;
       this.isMore = !!this.$more;
       this.isAllowNoChecked = ($filter.getAttribute('data-is-allow-no-check') === 'true') ? true : false;
+      this.isCSSInline = ($filter.getAttribute('data-is-css-inline') === 'false') ? false : true;
+
 
       // Remove $inputAll out $input
       this.$inputs = this.Not(this.$inputs, this.$inputAll);
@@ -214,6 +220,17 @@
           $nodeCur.style[key] = styles[key];
         }
       }
+    }
+    private Events(name: string) {
+      let event;
+      if( typeof(Event) === 'function' ) {
+        event = new Event(name);
+      }
+      else {
+        event = document.createEvent('Event');
+        event.initEvent(name, true, true);
+      }
+      return event;
     }
 
 
@@ -411,8 +428,17 @@
     private ShowTarget(): void {
       var that = this;
 
+      // Trigger event
+      this.$filter.dispatchEvent(this.evChangeBefore);
+
       // Reset tat ca cac $target: loai bo tat ca cac class
-      this.RemoveClass(this.$targets, `${this.classHide} ${this.classShow} ${this.classActived} ${this.classFirst} ${this.classLast}`);
+      var $targetNotChecked = this.Not(this.$targets, this.$targetChecked);
+      // Option 1: xoa class tren tat ca doi tuong
+      this.RemoveClass(this.$targets, `${this.classHide} ${this.classActived} ${this.classShow} ${this.classFirst} ${this.classLast}`);
+      // Option 2: xoa class tren cac doi tuong rieng biet
+      // this.RemoveClass(this.$targets, `${this.classFirst} ${this.classLast}`);
+      // this.RemoveClass($targetNotChecked, `${this.classActived} ${this.classShow}`);
+      // this.RemoveClass(this.$targetChecked, `${this.classHide}`);
       // Them class 'actived' vao cac $targetChecked de nhan biet theo thu tu
       this.AddClass(this.$targetChecked, this.classActived);
 
@@ -443,13 +469,22 @@
       /**
        * Add class tren cac loai $target
        */
-      this.CSS($targetHide, { display: 'none' });
-      this.CSS($targetShow, { display: '' });
+      if( this.isCSSInline ) {
+        this.CSS($targetHide, { display: 'none' });
+        this.CSS($targetShow, { display: '' });
+      }
 
+      // Them class de an cac doi tuong $itemHide
       this.AddClass($targetHide, this.classHide);
-      this.AddClass($targetShow, this.classShow);
-      this.AddClass($targetShow[0], this.classFirst);
-      this.AddClass($targetShow[$targetShow.length - 1], this.classLast);
+      this.$filter.dispatchEvent(this.evTargetHide);
+
+      // Add Timer de them hieu ung khi show Items
+      setTimeout(function() {
+        that.AddClass($targetShow, that.classShow);
+        that.AddClass($targetShow[0], that.classFirst);
+        that.AddClass($targetShow[$targetShow.length - 1], that.classLast);
+        that.$filter.dispatchEvent(that.evChangeAfter);
+      }, 50);
 
       // Toggle class hien thi Button More
       this.ToggleMore();

@@ -23,6 +23,9 @@
             this.classActived = 'filterjs-actived';
             this.classFirst = 'filterjs-first';
             this.classLast = 'filterjs-last';
+            this.evChangeBefore = this.Events('changebefore');
+            this.evChangeAfter = this.Events('changeafter');
+            this.evTargetHide = this.Events('targethide');
             this.$filter = $filter;
             var selectorInputAll = $filter.getAttribute('data-input-all') || false;
             var selectorInput = $filter.getAttribute('data-input') || false;
@@ -38,6 +41,7 @@
             this.more = parseInt($filter.getAttribute('data-target-more')) || this.more;
             this.isMore = !!this.$more;
             this.isAllowNoChecked = ($filter.getAttribute('data-is-allow-no-check') === 'true') ? true : false;
+            this.isCSSInline = ($filter.getAttribute('data-is-css-inline') === 'false') ? false : true;
             this.$inputs = this.Not(this.$inputs, this.$inputAll);
             this.$inputCheckedInit = this.$inputChecked = this.GetInputChecked();
             this.SetTargetChecked();
@@ -155,6 +159,17 @@
                 }
             }
         };
+        FilterJSOne.prototype.Events = function (name) {
+            var event;
+            if (typeof (Event) === 'function') {
+                event = new Event(name);
+            }
+            else {
+                event = document.createEvent('Event');
+                event.initEvent(name, true, true);
+            }
+            return event;
+        };
         FilterJSOne.prototype.EventChange = function () {
             var that = this;
             for (var key in this.$inputs) {
@@ -271,7 +286,9 @@
         };
         FilterJSOne.prototype.ShowTarget = function () {
             var that = this;
-            this.RemoveClass(this.$targets, this.classHide + " " + this.classShow + " " + this.classActived + " " + this.classFirst + " " + this.classLast);
+            this.$filter.dispatchEvent(this.evChangeBefore);
+            var $targetNotChecked = this.Not(this.$targets, this.$targetChecked);
+            this.RemoveClass(this.$targets, this.classHide + " " + this.classActived + " " + this.classShow + " " + this.classFirst + " " + this.classLast);
             this.AddClass(this.$targetChecked, this.classActived);
             this.$targetActived = this.ConvertNode(this.$filter.querySelectorAll("." + this.classActived));
             var $targetShow = [];
@@ -287,12 +304,18 @@
                 $targetShow = this.$targetActived;
             }
             var $targetHide = this.Not(this.$targets, $targetShow);
-            this.CSS($targetHide, { display: 'none' });
-            this.CSS($targetShow, { display: '' });
+            if (this.isCSSInline) {
+                this.CSS($targetHide, { display: 'none' });
+                this.CSS($targetShow, { display: '' });
+            }
             this.AddClass($targetHide, this.classHide);
-            this.AddClass($targetShow, this.classShow);
-            this.AddClass($targetShow[0], this.classFirst);
-            this.AddClass($targetShow[$targetShow.length - 1], this.classLast);
+            this.$filter.dispatchEvent(this.evTargetHide);
+            setTimeout(function () {
+                that.AddClass($targetShow, that.classShow);
+                that.AddClass($targetShow[0], that.classFirst);
+                that.AddClass($targetShow[$targetShow.length - 1], that.classLast);
+                that.$filter.dispatchEvent(that.evChangeAfter);
+            }, 50);
             this.ToggleMore();
         };
         FilterJSOne.prototype.ToggleMore = function () {

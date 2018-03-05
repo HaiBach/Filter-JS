@@ -5,7 +5,7 @@
 	.item {
 		padding: 10px 20px;
 		margin-bottom: 10px;
-		background-color: #FCF6C7;;
+		background-color: #FCF6C7;
 	}
 	.tag {
 		padding: 3px 15px;
@@ -34,12 +34,21 @@
 	#more-items.filterjs-show {
 		visibility: visible;
 	}
-
+	
+	/** ANIMATION **/
 	.filterjs-actived {
-		transition: opacity 1s;
 		opacity: 0;
 	}
 	.filterjs-show {
+		animation: show 1s both;
+	}
+}
+
+@keyframes show {
+	from {
+		opacity: 0;
+	}
+	to {
 		opacity: 1;
 	}
 }

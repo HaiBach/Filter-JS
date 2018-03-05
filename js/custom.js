@@ -29,3 +29,18 @@
     });
   });
 })(jQuery);
+
+
+
+// Javascript Custom
+(function() {
+
+  // Triger custom event
+  var $filter = document.querySelector('.filterjs');
+  $filter.addEventListener('changeafter', function() {
+  });
+})();
+
+// Jquery Custom
+(function($) {
+})(jQuery);

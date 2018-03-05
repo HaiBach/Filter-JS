@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="jp">
 	<head>
 		<title>Test Filter-JS</title>
+		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="css/bootstrap-reboot.css">
 		<link rel="stylesheet" href="css/bootstrap-grid.css">
@@ -22,7 +23,7 @@
 	<body>
 		<div class="container">
 			<div class="row">
-				<section class="filterjs" id="discontinued" data-input="#discontinued input" data-input-all="#all" data-target="#discontinued .item" data-reset="#reset" data-more="#more-items" data-target-max-show="4" data-target-more="2" data-is-allow-no-check="">
+				<section class="filterjs" id="discontinued" data-input="#discontinued input" data-input-all="#all" data-target="#discontinued .item" data-reset="#reset" data-more2="#more-items" data-target-max-show="4" data-target-more="2" data-is-allow-no-check="" data-is-css-inline="true">
 					<div class="inner">
 						<p class="txtLead">生産が終了した製品の一覧をご確認いただけます。</p>
 						<div class="list_fields">
@@ -31,31 +32,31 @@
 									<label><strong>製品を絞り込む</strong></label>
 								</li>
 								<li>
-									<input id="all" type="radio" name="all_field" value="all" checked="">
+									<input id="all" type="radio" name="meter" value="all" checked="">
 									<label for="all">すべて</label>
 								</li>
 								<li>
-									<input id="gas_meter" type="radio" name="gas_meter" value="gas_meter" checked="">
+									<input id="gas_meter" type="radio" name="meter" value="gas_meter">
 									<label for="gas_meter">ガスメーター</label>
 								</li>
 								<li>
-									<input id="water_meter" type="radio" name="water_meter" value="water_meter">
+									<input id="water_meter" type="radio" name="meter" value="water_meter">
 									<label for="water_meter">水道メーター</label>
 								</li>
 								<li>
-									<input id="flow_meter" type="radio" name="flow_meter" value="flow_meter">
+									<input id="flow_meter" type="radio" name="meter" value="flow_meter">
 									<label for="flow_meter">流量計</label>
 								</li>
 								<li>
-									<input id="flow_sensor" type="radio" name="flow_sensor" value="flow_sensor">
+									<input id="flow_sensor" type="radio" name="meter" value="flow_sensor">
 									<label for="flow_sensor">流量センサー</label>
 								</li>
 								<li>
-									<input id="indicator" type="radio" name="indicator" value="indicator">
+									<input id="indicator" type="radio" name="meter" value="indicator">
 									<label for="indicator">検針システム・指示計</label>
 								</li>
 								<li>
-									<input id="other" type="radio" name="other" value="other">
+									<input id="other" type="radio" name="meter" value="other">
 									<label for="other">その他計測機器・システム</label>
 								</li>
 								<li>
@@ -296,7 +297,8 @@
 				</section>
 			</div>
 		</div>
+		<script src="js/jquery-1.11.2.min.js"></script>
 		<script src="js/filter-js.js"></script>
-		<script src="js/test.js"></script>
+		<script src="js/custom.js"></script>
 	</body>
 </html>
